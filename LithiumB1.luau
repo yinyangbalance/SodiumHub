@@ -1,5 +1,4 @@
--- STILL IN TESTING MODE
--- Load Fluent and its addons so i wont have to suffer
+-- Load Fluent and its addons
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
@@ -39,7 +38,6 @@ print = RedirectPrint
 
 -- Function to execute server commands
 local function ExecuteServerCommand(command)
-    -- Example: Fire a RemoteEvent with command as a parameter
     local RemoteEvent = game:GetService("ReplicatedStorage"):FindFirstChild("CommandRemoteEvent")
     if RemoteEvent then
         RemoteEvent:FireServer(command)
@@ -50,11 +48,9 @@ end
 
 -- Function to execute local commands
 local function ExecuteLocalCommand(command)
-    -- Example: Handle local command execution
+    local player = game:GetService("Players").LocalPlayer
+    local character = player.Character
     if command == "reset" then
-        -- Example: Reset character position
-        local player = game:GetService("Players").LocalPlayer
-        local character = player.Character
         if character then
             character:SetPrimaryPartCFrame(CFrame.new(Vector3.new(0, 50, 0)))
             print("[INFO]: Character reset to origin")
@@ -73,6 +69,8 @@ local InputField = Window:AddInput("CommandInput", {
     Numeric = false,
     Finished = true,
     Callback = function(value)
+        if value == "" then return end
+        
         if string.sub(value, 1, 1) == "/" then
             -- Server command
             ExecuteServerCommand(string.sub(value, 2))  -- Remove the '/' prefix
